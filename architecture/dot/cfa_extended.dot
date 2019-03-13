@@ -1,0 +1,61 @@
+digraph {
+
+fontsize=20
+edge [dir=both arrowtail=diamond, arrowhead=open, fillcolor=black]
+node [height=0.75 width=1.2 fixedsize=True style=filled fillcolor=white]
+bgcolor=white
+
+subgraph cluster_1 {
+
+    label="Normal File"
+    labeljust="left"
+    labelloc="t"
+    bgcolor=darkseagreen3
+
+    cf_field [label="CF_Field"]
+    attributes [label="CF\nAttributes"]
+    coordinates [label="CF\nCoordinates"]
+    data [label="Data" fillcolor=gold]
+
+
+    cf_field -> attributes
+    cf_field -> coordinates
+    cf_field -> data
+}
+
+subgraph cluster_2 {
+
+    label="Semantic Storage File"
+    labeljust="left"
+    bgcolor=darkkhaki
+    labelloc="t"
+
+    cf_field1 [label="CF_Field"]
+    attributes1 [label="CF\nAttributes"]
+    coordinates1 [label="CF\nCoordinates"]
+    data1 [label="Partition\nMatrix"]
+
+    node [fillcolor=darkseagreen3]
+    file2 [label="Fragment\nOn Disk"]
+    object1 [label="Fragment\nin Object.St"]
+    tape1 [label="Fragment\n on Tape"]
+
+    frag1 [shape=note,label="Every fragment\nis a normal file", width=1.5]
+
+    cf_field1 -> attributes1
+    cf_field1 -> coordinates1
+    cf_field1 -> data1
+
+    edge [arrowtail=odiamond]
+
+    data1 -> file2:n [headlabel="0..N  "]
+    data1:s -> object1:n [headlabel="0..N  "]
+    data1:se -> tape1:n [headlabel="0..N  " ]
+
+}
+    coordinates-> fred [style=invis]
+    fred [label="Build on CF Data Model
+    & CF Aggregation Framework
+    https://doi.org/10.5194/gmd-10-4619-2017
+    & http://www.met.reading.ac.uk/~david/cfa/0.4/" shape=none]
+}

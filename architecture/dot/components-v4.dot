@@ -1,0 +1,111 @@
+digraph { ranksep=0.2
+
+
+    subgraph cluster_0 {
+    label="WP4: Internal and External Interactions (v4)"
+    node [shape=rectangle, style="filled,rounded" fontsize=16]
+
+    Testing [fillcolor=thistle4 shape=doubleoctagon]
+
+
+    node [fillcolor=firebrick4, fontcolor=white]
+    ESDM [label="ESDM-API"]
+    fragments [label="ESDM\nFragments"]
+    Performance
+    Layout
+
+    node [fillcolor=gold4]
+    CFPM [label="CF\nFragments"]
+    CFAPI [label="CF-API"]
+    migration [label="Migration\nTools"]
+    analysis [label="Analysis\n Semantic API"]
+
+    node [fillcolor="black", fontcolor=white]
+    scheduler [label="Workflow (cylc)"]
+    workflow [label="Scheduler (SLURM)"]
+
+    node [fillcolor="blue4"]
+    init [label="Initialise"]
+    simulation [label="Simulate"]
+    ensemble [label="Ensemble"]
+
+    XIOS [fillcolor="darkslategray4"]
+
+    WP5 [fillcolor="red"]
+
+    node [fillcolor="olivedrab"]
+    Appliances [shape=box3d]
+    Kernels [label="Simple\nKernels"]
+    Compression [label="Compression\ntools"]
+    Collapse [label="Dimensional\nCollapse"]
+    kernel_note [label="Informs\nSimple Kernels", shape=note]
+
+    node [fillcolor="white", fontcolor=black]
+    netcdf [label="NetCDF API"]
+    files [label="NetCDF\nFiles" shape=tab]
+    dump [label="Dump\nFiles" shape=tab]
+
+    storage [shape=rectangle, style=normal]
+
+    scheduler -> workflow
+    workflow -> ensemble
+    workflow -> init
+    workflow -> simulation
+    workflow -> migration
+
+    init -> simulation
+    #simulation -> migration
+    ensemble -> simulation
+    migration -> analysis
+    init -> dump [dir=back]
+
+    ensemble -> XIOS
+    ensemble -> migration
+    analysis -> XIOS [style=invis]
+
+    simulation -> dump
+    migration -> CFAPI
+    CFAPI -> netcdf
+    CFAPI -> CFPM
+    analysis -> CFAPI
+
+    netcdf -> files
+    netcdf -> CFPM [dir=back]
+    XIOS -> netcdf
+    WP5 -> netcdf
+    WP5 -> ESDM [style=dotted]
+    WP5 -> kernel_note [style =dotted]
+    netcdf -> ESDM
+    ESDM -> Layout
+    ESDM -> Performance [dir=both]
+
+    Layout -> fragments
+    Performance -> storage [dir=both]
+
+    fragments -> storage
+    files -> storage
+    dump -> storage
+
+    edge [dir=back arrowtail=empty]
+    node [shape=box3d]
+    Objects [label="S3"]
+
+    storage -> Objects
+    storage -> POSIX
+    storage -> tape
+    storage -> Appliances
+    storage -> "Burst\nBuffer"
+    storage -> NoSQL
+    tape -> NoSQL [style=invis]
+    POSIX -> "Burst\nBuffer" [style=invis]
+    Appliances -> Objects [style=invis]
+    Appliances -> Kernels
+    Kernels -> Collapse
+    Kernels -> Compression
+
+    {rank=same;Layout;Performance}
+    {rank=same;init;simulation}
+    {rank=same;migration;analysis}
+    {rank=same;dump;files;fragments}
+}
+}

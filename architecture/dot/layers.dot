@@ -1,0 +1,43 @@
+digraph {
+ranksep=0.05
+
+edge [dir=none]
+node [shape=rectangle, style="filled,rounded" fontsize=16 fixedsize=true width=2]
+
+Testing [fillcolor=thistle4, fontcolor=white]
+Scheduler [fillcolor=black, fontcolor=white]
+Workflow [fillcolor=black, fontcolor=white]
+Deployment [fillcolor=blue4, fontcolor=white, label="WP1: Deployment"]
+NetCDF [fillcolor=white]
+Storage [fillcolor=white]
+node [width=1]
+XIOS [fillcolor=darkslategray4, fontcolor=white]
+SemST [fillcolor=gold4, fontcolor=white]
+ESDM [fillcolor=firebrick4, fontcolor=white]
+
+Appliances [width=1.1, fillcolor=olivedrab]
+node [fillcolor=white]
+POSIX
+S3
+Tape
+
+Testing -> Scheduler
+Scheduler -> Workflow
+Workflow -> Deployment
+Deployment -> SemST
+Deployment -> XIOS
+XIOS -> NetCDF
+SemST -> NetCDF
+NetCDF -> ESDM
+NetCDF -> Storage
+ESDM -> Storage
+Storage -> Appliances
+Storage -> POSIX
+Storage -> S3
+Storage -> Tape
+
+Appliances -> S3 [style=invis]
+POSIX -> Tape [style=invis]
+
+
+}

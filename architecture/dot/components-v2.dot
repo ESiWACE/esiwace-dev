@@ -1,0 +1,95 @@
+digraph { ranksep=0.2
+
+    node [shape=rectangle, style="filled,rounded" fontsize=16]
+
+
+    Testing [fillcolor=thistle4 shape=doubleoctagon]
+
+
+    node [fillcolor=firebrick4, fontcolor=white]
+    ESDM [label="ESDM-API"]
+    fragments [label="ESDM\nFragments"]
+    Performance
+    Layout
+
+    node [fillcolor=gold4]
+    CFPM [label="CF\nFragments"]
+    CFAPI [label="CF-API"]
+    migration [label="Migration\nTools"]
+    analysis [label="Analysis\n Semantic API"]
+
+    node [fillcolor="black", fontcolor=white]
+    scheduler [label="Scheduler"]
+    workflow [label="Workflow\nManager"]
+
+    node [fillcolor="blue4"]
+    init [label="Initialise"]
+    simulation [label="Simulate"]
+    ensemble [label="Ensemble"]
+
+    XIOS [fillcolor="darkslategray4"]
+
+    node [fillcolor="olivedrab"]
+    Appliances [shape=box3d]
+
+    node [fillcolor="white", fontcolor=black]
+    netcdf [label="NetCDF API"]
+    files [label="NetCDF\nFiles" shape=tab]
+    dump [label="Dump\nFiles" shape=tab]
+
+    storage [shape=rectangle, style=normal]
+
+    scheduler -> workflow
+    workflow -> ensemble
+    workflow -> init
+    workflow -> simulation
+    workflow -> migration
+
+    init -> simulation
+    #simulation -> migration
+    ensemble -> simulation
+    migration -> analysis
+    init -> dump [dir=back]
+
+    ensemble -> XIOS
+    ensemble -> migration
+    analysis -> XIOS [style=invis]
+
+    simulation -> dump
+    migration -> CFAPI
+    CFAPI -> netcdf
+    CFAPI -> CFPM
+    analysis -> CFAPI
+
+    netcdf -> files
+    netcdf -> CFPM [dir=back]
+    XIOS -> netcdf
+    netcdf -> ESDM
+    ESDM -> Layout
+    ESDM -> Performance [dir=both]
+
+    Layout -> fragments
+    Performance -> storage [dir=both]
+
+    fragments -> storage
+    files -> storage
+    dump -> storage
+
+    edge [dir=back arrowtail=empty]
+    node [shape=box3d]
+
+    storage -> Objects
+    storage -> POSIX
+    storage -> tape
+    storage -> Appliances
+    storage -> "Burst\nBuffer"
+
+
+
+
+    {rank=same;Layout;Performance}
+    {rank=same;init;simulation}
+    {rank=same;migration;analysis}
+    {rank=same;dump;files;fragments}
+
+}

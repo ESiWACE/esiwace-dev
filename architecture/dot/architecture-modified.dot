@@ -1,0 +1,51 @@
+digraph changed {
+ graph [fontname = "Sans-Serif", compound=true, splines=False, fontsize=20,ranksep=0.2];
+ node [shape=box, fontname = "Sans-Serif", fontsize=20];
+ edge [fontname = "Sans-Serif"; dir=none];
+
+   ESDM [label= "ESDM\n(Plugin)", shape="component",fillcolor="#bda954",style=filled,
+   color=white,fontcolor=white];
+
+   tools [label="Import/Export\nTools", fillcolor="#999999", style=filled, color=white, fontcolor=white]
+   services [label="Management\nServices", fillcolor="#999999", style=filled,color=white, fontcolor=white]
+
+   subgraph cluster_esd {
+        label="ESDM\nBackend";style=dotted;labeljust=r;labelloc=t;
+
+        config [label="Site Config:\n storage types, \n performance\nmodels", color=white, shape=note,fillcolor="gold",style=filled]
+
+        ESDI [label="ESD interface", shape="ellipse", style="dotted"];
+
+        layout [label="Layout\nComponent"]
+
+        {rank=same;config,layout}
+
+        ESDI -> layout;
+        ESDI -> config [style=invis]
+        config -> layout [style=dotted,label="   "]
+
+        "Metadata\nbackend" [shape="oval", style="dotted"]
+        "Storage\nbackend" [shape="oval", style="dotted"];
+
+        layout:s -> "Metadata\nbackend":n;
+        layout:s -> "Storage\nbackend":n;
+
+        node [fontsize=18, fontcolor=white, color=white,
+            style=filled, fillcolor="#9dba59"]
+
+        OBS [label="Objects", shape="cylinder"];
+        POSIX [label="Files",shape="cylinder"];
+        DB [label="RDBMS or\nNOSQL", shape="component"]
+
+        "Storage\nbackend" -> OBS:n;
+        "Storage\nbackend" -> POSIX:n;
+        "Metadata\nbackend" -> DB:n;
+        "Metadata\nbackend" -> POSIX:n;
+        "Metadata\nbackend" -> OBS:n;
+
+  }
+
+  tools -> ESDI;
+  services -> ESDI;
+  ESDM -> ESDI;
+}
